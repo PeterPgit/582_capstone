@@ -1,6 +1,6 @@
-[submodule "ftl/aws-deepracer-launcher"]
+[submodule "aws-deepracer-launcher"]
 	path = aws-deepracer-launcher
 	url = https://github.com/PeterPgit/aws-deepracer-launcher
-[submodule "ftl/aws-deepracer-follow-the-leader-sample-project"]
+[submodule "aws-deepracer-follow-the-leader-sample-project"]
 	path = aws-deepracer-follow-the-leader-sample-project
-	url = https://github.com/PeterPgit/aws-deepracer-follow-the-leader-sample-project.git
+	url = https://github.com/PeterPgit/aws-deepracer-follow-the-leader-sample-project
