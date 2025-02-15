@@ -1,6 +1,6 @@
 # Initial Requirements
 
-- [ ] Initial Architecture Document
-- [ ] Updated Agile Reference Stories
-- [ ] Sprint 1 Requirements Stack
-- [ ] Sprint 1 Requirements Artifacts
+- [X] Initial Architecture Document
+- [X] Updated Agile Reference Stories
+- [X] Sprint 1 Requirements Stack
+- [X] Sprint 1 Requirements Artifacts
