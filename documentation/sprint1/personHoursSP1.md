@@ -10,6 +10,7 @@
 - .25 (2/3)
 - 1.5 (2/11)
 - 3 (2/15)
+- 2 (2/16)
 
 ## Ian Wilson
 
@@ -36,4 +37,4 @@
 - 2.5 (2/11) - Followed FTL instructions on Github - failed to build webserver
 - 2 (2/13) - Updated OS packages on car (about 1000 apt packages)
 - 1 (2/14) - Switched to different fork of FTL and rebuilt - still failed to build webserver
-- 1.5 (2/15) - Successfullly built FTL and tested car (See video) 
+- 1.5 (2/15) - Successfully built FTL and tested car (See video)

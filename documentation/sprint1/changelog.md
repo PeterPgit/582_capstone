@@ -23,3 +23,10 @@
 ### Changes
 
 - Fixed some bugs associated with the Follow the Leader GitHub compilation and building. **(Peter)**
+
+## February 15 (Sprint 1)
+
+### Added
+
+- Got FTL working **(Everyone)**
+- Worked on docs/GitHub repo **(Everyone)**
