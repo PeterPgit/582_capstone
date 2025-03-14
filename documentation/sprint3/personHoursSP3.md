@@ -1,7 +1,8 @@
-# Sprint 2 Hours
+# Sprint 3 Hours
 
 ## Jack Youngquist
-  
+
+- 2 (3/9)
 - 2 (3/12)
 
 ## Peter Pham
@@ -12,12 +13,15 @@
 
 ## Ian Wilson
 
+- 2 (3/9)
 - 2 (3/12)
 
 ## Andrew Uriell
 
+- 2 (3/9)
 - 2 (3/12)
 
 ## Michael Oliver
 
+- 2 (3/9)
 - 2 (3/12)
