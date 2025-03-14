@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepRacer Control Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        input[type="file"], input[type="number"] {
+            margin: 10px;
+            padding: 8px;
+        }
+        input[type="range"] {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Amazon DeepRacer Control Panel</h1>
+
+    <!-- Power Controls -->
+    <h2>Car Power</h2>
+    <button onclick="startCarCommand()">Start Car</button>
+    <button onclick="toggleCar('off')">Stop Car</button>
+
+    <!-- Music Upload & Play -->
+    <h2>Music Player</h2>
+    <input type="file" id="musicFile">
+    <button onclick="uploadMusic()">Upload & Play</button>
+
+    <!-- Speed Control -->
+    <h2>Speed Control</h2>
+    <input type="range" id="speedSlider" min="0" max="100" value="50" oninput="syncSpeed(this.value)">
+    <input type="number" id="speedInput" min="0" max="100" value="50" oninput="syncSpeed(this.value)">
+    <p>Current Speed: <span id="speedValue">50</span>%</p>
+
+    <script>
+        const CAR_IP = "http://192.168.1.6:6969"; // Replace with DeepRacer's IP
+
+        function toggleCar(action) {
+            fetch(`${CAR_IP}/power`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.status))
+            .catch(error => console.error('Error:', error));
+        }
+
+        function uploadMusic() {
+            let fileInput = document.getElementById('musicFile');
+            let file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file first!");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", file);
+
+            fetch(`${CAR_IP}/music/upload`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => alert(data.status));
+        }
+
+        function syncSpeed(value) {
+            document.getElementById("speedSlider").value = value;
+            document.getElementById("speedInput").value = value;
+            document.getElementById("speedValue").innerText = value;
+
+            fetch(`${CAR_IP}/speed`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ speed: value })
+            })
+            .then(response => response.json())
+            .catch(error => console.error('Error:', error));
+        }
+
+        function startCarCommand() {
+          const url = 'http://192.168.1.10:6970';
+          const headers = {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*' 
+          };
+          const body = JSON.stringify({
+            command: 'start_car'
+          });
+
+          fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: body
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Response:', data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          }); 
+        }
+    </script>
+
+</body>
+</html>
+
