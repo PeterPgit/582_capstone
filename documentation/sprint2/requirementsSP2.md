@@ -1,3 +1,8 @@
-# Sprint 3 Requirements
+# Sprint 2 Requirements
 
-- [X] Add Rasberry Pi hardware to car
+- [X] Add Raspberry Pi hardware to car
+- [X] Implement home defense feature
+- [X] Kill switch for the car
+- [X] Startup script for FTL
+- [X] Improve batteries
+- [X] Optimize detection model

@@ -1,9 +1,8 @@
-# Sprint 2 Requiremnets
+# Sprint 3 Requirements
 
-- [X] Add Rasberry Pi hardware to car
-- [X] Add Rassberry Pi software to car
-- [X] Implement home defense feature
-- [X] Kill switch for the car
-- [X] Startup script for FTL
-- [X] Improve batteries
-- [X] Optimize detection model
+- [X] Build simple website to toggle "Follow the Leader" on and off
+- [X] Look into toggling power supply of taser
+- [X] Create basic web app
+- [X] Create video for presentation
+- [X] Implement variable speed
+- [X] Implement compute module stick
