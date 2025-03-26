@@ -1,123 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepRacer Control Panel</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-        }
-        input[type="file"], input[type="number"] {
-            margin: 10px;
-            padding: 8px;
-        }
-        input[type="range"] {
-            width: 50%;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepRacer Control Panel</title>
+  <style>
+    :root {
+      --primary-color: #1e88e5;
+      --accent-color: #43a047;
+      --background: #f4f6f9;
+      --card-bg: #ffffff;
+      --border-color: #ddd;
+      --text-color: #333;
+      --error-color: #e53935;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background);
+      margin: 0;
+      padding: 20px;
+      color: var(--text-color);
+    }
+
+    h1,
+    h2 {
+      color: var(--primary-color);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 10px 5px;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    input[type="file"],
+    input[type="number"],
+    input[type="password"],
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin: 10px 0;
+    }
+
+    input[type="range"] {
+      width: 60%;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .login-container {
+      max-width: 350px;
+      margin: 100px auto;
+      padding: 30px;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #loginError {
+      color: var(--error-color);
+      margin-top: 10px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+
+    .speed-control input {
+      margin: 5px;
+    }
+
+    .logout-btn {
+      background-color: var(--accent-color);
+    }
+
+    .logout-btn:hover {
+      background-color: #2e7d32;
+    }
+  </style>
 </head>
+
 <body>
 
-    <h1>Amazon DeepRacer Control Panel</h1>
+  <div id="loginPage" class="login-container">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+    <p id="loginError"></p>
+  </div>
 
-    <!-- Power Controls -->
-    <h2>Car Power</h2>
-    <button onclick="startCarCommand()">Start Car</button>
-    <button onclick="toggleCar('off')">Stop Car</button>
+  <div id="controlPanel" class="hidden container">
+    <div class="card">
+      <h1>Amazon DeepRacer Control Panel</h1>
+    </div>
 
-    <!-- Music Upload & Play -->
-    <h2>Music Player</h2>
-    <input type="file" id="musicFile">
-    <button onclick="uploadMusic()">Upload & Play</button>
+    <div class="card">
+      <h2>Car Power</h2>
+      <button onclick="startCarCommand()">Start Car</button>
+      <button onclick="stopCarCommand()">Stop Car</button>
+    </div>
 
-    <!-- Speed Control -->
-    <h2>Speed Control</h2>
-    <input type="range" id="speedSlider" min="0" max="100" value="50" oninput="syncSpeed(this.value)">
-    <input type="number" id="speedInput" min="0" max="100" value="50" oninput="syncSpeed(this.value)">
-    <p>Current Speed: <span id="speedValue">50</span>%</p>
+    <div class="card">
+      <h2>Music Player</h2>
+      <h4>Only .wav files supported!</h4>
+      <input type="file" id="musicFile"><br>
+      <button onclick="uploadMusic()">Upload & Play</button>
+    </div>
 
-    <script>
-        const CAR_IP = "http://192.168.1.6:6969"; // Replace with DeepRacer's IP
+    <div class="card">
+      <h2>Speed Control</h2>
+      <div class="speed-control">
+        <input type="range" id="speedSlider" min="0" max="100" value="50" oninput="syncSpeed(this.value)">
+        <input type="number" id="speedInput" min="0" max="100" value="50" oninput="syncSpeed(this.value)">
+      </div>
+      <p>Current Speed: <span id="speedValue">50</span>%</p>
+    </div>
 
-        function toggleCar(action) {
-            fetch(`${CAR_IP}/power`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action })
-            })
-            .then(response => response.json())
-            .then(data => alert(data.status))
-            .catch(error => console.error('Error:', error));
-        }
+    <div class="card">
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
 
-        function uploadMusic() {
-            let fileInput = document.getElementById('musicFile');
-            let file = fileInput.files[0];
+  <script>
+    window.onload = function () {
+      if (sessionStorage.getItem("loggedIn") === "true") {
+        showControlPanel();
+      }
+    };
 
-            if (!file) {
-                alert("Please select a file first!");
-                return;
-            }
+    function login() {
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
 
-            let formData = new FormData();
-            formData.append("file", file);
+      fetch('login.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "success") {
+            sessionStorage.setItem("loggedIn", "true");
+            showControlPanel();
+          } else {
+            document.getElementById("loginError").innerText = data.message;
+          }
+        });
+    }
 
-            fetch(`${CAR_IP}/music/upload`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => alert(data.status));
-        }
+    function logout() {
+      fetch('logout.php')
+        .then(response => response.json())
+        .then(() => {
+          sessionStorage.removeItem("loggedIn");
+          location.reload();
+        });
+    }
 
-        function syncSpeed(value) {
-            document.getElementById("speedSlider").value = value;
-            document.getElementById("speedInput").value = value;
-            document.getElementById("speedValue").innerText = value;
+    function showControlPanel() {
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("controlPanel").classList.remove("hidden");
+    }
 
-            fetch(`${CAR_IP}/speed`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ speed: value })
-            })
-            .then(response => response.json())
-            .catch(error => console.error('Error:', error));
-        }
+    function syncSpeed(value) {
+      document.getElementById("speedSlider").value = value;
+      document.getElementById("speedInput").value = value;
+      document.getElementById("speedValue").innerText = value;
+    }
 
-        function startCarCommand() {
-          const url = 'http://192.168.1.10:6970';
-          const headers = {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*' 
-          };
-          const body = JSON.stringify({
-            command: 'start_car'
-          });
+    function startCarCommand() {
+      const url = 'http://192.168.1.10:6969';
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const body = JSON.stringify({
+        command: 'start_car'
+      });
 
-          fetch(url, {
-            method: 'POST',
-            headers: headers,
-            body: body
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Response:', data);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          }); 
-        }
-    </script>
+      fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: body
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Network response was not ok');
+          }
+        })
+        .then(data => {
+          console.log('Response:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
 
+    function stopCarCommand() {
+      const url = 'http://192.168.1.10:6969';
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      const body = JSON.stringify({
+        command: 'stop_car'
+      });
+
+      fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: body
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Network response was not ok');
+          }
+        })
+        .then(data => {
+          console.log('Response:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    function uploadMusic() {
+      const fileInput = document.getElementById('musicFile');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please select a music file.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('music_file', file);
+
+      fetch('http://192.168.1.6:6970/upload_music', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json().then(data => ({ status: response.status, body: data }))) // Get both status and body
+        .then(({ status, body }) => {
+          if (status === 200) {
+            console.log('Music Upload Response:', body);
+            // alert("Music uploaded and playing!");
+          } else {
+            console.error('Upload error:', body.error);
+            // alert("Upload failed: " + body.error);
+          }
+        })
+        .catch(error => {
+          console.error('Network error:', error);
+          // alert("Upload failed: Network error.");
+        });
+    }
+
+  </script>
 </body>
-</html>
 
+</html>
