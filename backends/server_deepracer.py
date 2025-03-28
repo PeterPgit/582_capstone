@@ -37,7 +37,7 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
     def handle_command(self, data):
         # Extract the command from the JSON payload
         command = data.get("command")
-        
+
         if command == "start_car":
             # Execute command to start the car (replace with your actual command)
             os.system('/usr/bin/tmux send-keys -t "Car:0.0" "ros2 service call /ctrl_pkg/vehicle_state deepracer_interfaces_pkg/srv/ActiveStateSrv \'{\"state\": 3}\'" ENTER')
@@ -46,6 +46,19 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
             time.sleep(1)
             os.system('/usr/bin/tmux send-keys -t "Car:0.0" "ros2 service call /ftl_navigation_pkg/set_max_speed deepracer_interfaces_pkg/srv/SetMaxSpeedSrv \'{\"max_speed_pct\": 0.99}\'" ENTER')
             response = {"status": "Car started\n"}
+        elif command == "set_speed":
+            # Ensure that a valid speed value is provided
+            try:
+                speed = int(data.get("speed"))
+                if 0 <= speed <= 100:
+                    # Command to set the car's speed (replace with your actual command to set the speed)
+                    os.system(f'/usr/bin/tmux send-keys -t "Car:0.0" "ros2 service call /ftl_navigation_pkg/set_max_speed deepracer_interfaces_pkg/srv/SetMaxSpeedSrv \'{{\"max_speed_pct\": {speed / 100}}}\'" ENTER')
+                    response = {"status": f"Speed set to {speed}%\n"}
+                else:
+                    response = {"error": "Invalid speed value. Please provide a value between 0 and 100."}
+            except ValueError:
+                response = {"error": "Invalid speed value."}
+
         elif command == "stop_car":
             os.system('/usr/bin/tmux send-keys -t "Car:0.0" "ros2 service call /ctrl_pkg/enable_state deepracer_interfaces_pkg/srv/EnableStateSrv \'{\"is_active\": False}\'" ENTER')
             response = {"status": "Car stopped\n"}
@@ -57,6 +70,8 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')  # Allow any origin
         self.end_headers()
         self.wfile.write(json.dumps(response).encode())
+
+
 
 # Set up the server and start listening on port 6969
 def run(server_class=http.server.HTTPServer, handler_class=CommandHandler):
