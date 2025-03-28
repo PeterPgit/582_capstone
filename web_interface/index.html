@@ -196,6 +196,38 @@
     }
 
     function syncSpeed(value) {
+      // Update the UI with the current speed
+      document.getElementById("speedSlider").value = value;
+      document.getElementById("speedInput").value = value;
+      document.getElementById("speedValue").innerText = value;
+
+      // Send the updated speed to the server
+      const url = 'http://192.168.1.10:6969'; // Adjust the IP and port accordingly
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      const body = JSON.stringify({
+        command: 'set_speed',
+        speed: value
+      });
+
+      // Send the POST request
+      fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: body
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Speed update response:', data);
+        })
+        .catch(error => {
+          console.error('Error updating speed:', error);
+        });
+    }
+
+    function syncSpeed(value) {
       document.getElementById("speedSlider").value = value;
       document.getElementById("speedInput").value = value;
       document.getElementById("speedValue").innerText = value;
