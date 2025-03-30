@@ -2,6 +2,8 @@
 
 ## Jack Youngquist
 
+- 3 (3/26)
+- 2 (3/28)
 
 ## Peter Pham
 
