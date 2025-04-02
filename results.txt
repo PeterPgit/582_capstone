@@ -1,0 +1,11 @@
+normal battery:
+~6in to stop from full speed
+
+speed: ~5.3ft/second = ~3.6 mi/hr
+
+overclocked battery: 
+~ft to stop from full speed
+
+Forwards: ~8ft/second = ~5.5 mi/hr
+Backwards: ~10ft/second = ~6.8 mi/hr
+
