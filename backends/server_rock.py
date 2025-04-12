@@ -1,22 +1,45 @@
+# Authors: Ian Wilson, Andrew Uriell, Peter Pharm, Michael Oliver
+# Class: Senior Design -- EECS582
+# Date: April 10, 2025
+# Purpose: Python3 secure Flask server to upload & play music
+# Code sources: Stackoverflow, ChatGPT, ourselves
+
 import os
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import subprocess
-from flask_cors import CORS  # Enable cross-origin requests
+from flask_cors import CORS
+from functools import wraps
 
-app = Flask(__name__)
-CORS(app)  # Allow frontend requests
-
+# --- CONFIG ---
 UPLOAD_FOLDER = os.path.join(os.path.expanduser("~"), "Downloads")
+ALLOWED_EXTENSIONS = {'wav'}
+AUTH_TOKEN = "super_secret_token"
+CERT_FILE = "cert.pem"
+KEY_FILE = "key.pem"
+
+# --- APP SETUP ---
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes (adjust as needed)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-ALLOWED_EXTENSIONS = {'wav'}
-
+# --- HELPERS ---
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def require_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if token != f"Bearer {AUTH_TOKEN}":
+            return jsonify({'error': 'Unauthorized'}), 401
+        return f(*args, **kwargs)
+    return decorated
+
+# --- ROUTES ---
 @app.route('/upload_music', methods=['POST'])
+@require_auth
 def upload_music():
     if 'music_file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
@@ -30,14 +53,12 @@ def upload_music():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
-        # Check if file already exists
         if os.path.exists(file_path):
             message = 'File already exists. Playing existing file.'
         else:
             file.save(file_path)
             message = 'Music uploaded and playing!'
 
-        # Play the file using `aplay`
         try:
             subprocess.run(["aplay", file_path], check=True)
             return jsonify({'message': message, 'file': filename}), 200
@@ -46,5 +67,8 @@ def upload_music():
 
     return jsonify({'error': 'Invalid file type. Only .wav allowed'}), 400
 
+# --- MAIN ---
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=6970, debug=True)
+    context = (CERT_FILE, KEY_FILE)  # Certificate & key files for HTTPS
+    app.run(host='0.0.0.0', port=6970, ssl_context=context)
+
