@@ -195,30 +195,38 @@
       document.getElementById("controlPanel").classList.remove("hidden");
     }
 
+    const AUTH_TOKEN = "super_secret_token"; 
+   
+    function securePost(url, bodyObj) {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AUTH_TOKEN}`
+        },
+        body: JSON.stringify(bodyObj)
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+      });
+    }
+    
     function syncSpeed(value) {
-      // Update the UI with the current speed
       document.getElementById("speedSlider").value = value;
       document.getElementById("speedInput").value = value;
       document.getElementById("speedValue").innerText = value;
-
-      // Send the updated speed to the server
-      const url = 'http://192.168.1.10:6969'; // Adjust the IP and port accordingly
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-
-      const body = JSON.stringify({
+    
+      const url = 'https://192.168.0.102:6969'; // Updated IP address
+      securePost(url, {
         command: 'set_speed',
         speed: value
-      });
-
-      // Send the POST request
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: body
       })
-        .then(response => response.json())
         .then(data => {
           console.log('Speed update response:', data);
         })
@@ -226,103 +234,63 @@
           console.error('Error updating speed:', error);
         });
     }
-
-    function syncSpeed(value) {
-      document.getElementById("speedSlider").value = value;
-      document.getElementById("speedInput").value = value;
-      document.getElementById("speedValue").innerText = value;
-    }
-
     function startCarCommand() {
-      const url = 'http://192.168.1.10:6969';
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-      const body = JSON.stringify({
+      const url = 'https://192.168.0.102:6969'; // Updated IP address
+      securePost(url, {
         command: 'start_car'
-      });
-
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: body
       })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Network response was not ok');
-          }
-        })
         .then(data => {
-          console.log('Response:', data);
+          console.log('Start car response:', data);
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('Start car error:', error);
         });
     }
-
     function stopCarCommand() {
-      const url = 'http://192.168.1.10:6969';
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-      const body = JSON.stringify({
+      const url = 'https://192.168.0.102:6969'; // Updated IP address
+      securePost(url, {
         command: 'stop_car'
-      });
-
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: body
       })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Network response was not ok');
-          }
-        })
         .then(data => {
-          console.log('Response:', data);
+          console.log('Stop car response:', data);
         })
         .catch(error => {
-          console.error('Error:', error);
+          console.error('Stop car error:', error);
         });
     }
-
     function uploadMusic() {
       const fileInput = document.getElementById('musicFile');
       const file = fileInput.files[0];
-
+    
       if (!file) {
         alert("Please select a music file.");
         return;
       }
-
+    
       const formData = new FormData();
       formData.append('music_file', file);
-
-      fetch('http://192.168.1.6:6970/upload_music', {
+    
+      const url = 'https://192.168.0.100:6970/upload_music'; // Updated IP address
+      fetch(url, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${AUTH_TOKEN}` // Add the Authorization header
+        },
         body: formData
       })
-        .then(response => response.json().then(data => ({ status: response.status, body: data }))) // Get both status and body
+        .then(response => response.json().then(data => ({ status: response.status, body: data })))
         .then(({ status, body }) => {
           if (status === 200) {
-            console.log('Music Upload Response:', body);
-            // alert("Music uploaded and playing!");
+            console.log('Music uploaded and playing:', body);
           } else {
             console.error('Upload error:', body.error);
-            // alert("Upload failed: " + body.error);
           }
         })
         .catch(error => {
           console.error('Network error:', error);
-          // alert("Upload failed: Network error.");
         });
     }
-
+    
   </script>
 </body>
 
