@@ -1,3 +1,10 @@
+<!-- 
+Authors: Ian Wilson, Andrew Uriell, Peter Pharm, Michael Oliver 
+Class: Senior Design -- EECS582
+Date: March 13, 2025
+Purpose: Hashes password
+Code sources: Stackoverflow, ChatGPT, ourselves 
+-->
 <?php
 $password = "deepracer";
 $hashedpassword = password_hash($password, PASSWORD_BCRYPT);

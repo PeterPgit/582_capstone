@@ -1,1 +1,29 @@
 # Change Log
+
+## April 10
+
+### Added
+
+- Wrote and added security mechanism/scripts for the car (**Mikey**)
+
+## April 9
+
+### Added
+
+- Connected taser to car and tested everything together (**Everyone**)
+
+## April 6 (Sprint 5)
+
+### Added:
+
+- Got taser connected to pi and working (**Peter**)
+- Wrote small control script (**Peter**)
+
+## April 2 (Sprint 5)
+
+### Added:
+
+- Researched manual control of RC car (**Everyone**)
+- Found guide for controlling the car with a controller (https://docs.pybricks.com/en/latest/iodevices/xboxcontroller.html)
+- Another guide: https://www.allisonthackston.com/articles/aws-deepracer-3-joy.html
+- Collected speed data

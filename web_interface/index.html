@@ -1,3 +1,11 @@
+<!-- 
+Authors: Ian Wilson, Andrew Uriell, Peter Pharm, Michael Oliver 
+Class: Senior Design -- EECS582
+Date: March 26, 2025
+Purpose: Handles main page of the website
+Code sources: Stackoverflow, ChatGPT, ourselves 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,6 +13,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DeepRacer Control Panel</title>
+  <!-- Styling for the website -->
   <style>
     :root {
       --primary-color: #1e88e5;
@@ -114,6 +123,7 @@
 
 <body>
 
+  <!-- Login page for the website -->
   <div id="loginPage" class="login-container">
     <h2>Login</h2>
     <input type="text" id="username" placeholder="Username"><br>
@@ -127,12 +137,14 @@
       <h1>Amazon DeepRacer Control Panel</h1>
     </div>
 
+    <!-- Buttons to control the car -->
     <div class="card">
       <h2>Car Power</h2>
       <button onclick="startCarCommand()">Start Car</button>
       <button onclick="stopCarCommand()">Stop Car</button>
     </div>
 
+    <!-- Section to upload music to the raspberry pi server -->
     <div class="card">
       <h2>Music Player</h2>
       <h4>Only .wav files supported!</h4>
@@ -140,6 +152,7 @@
       <button onclick="uploadMusic()">Upload & Play</button>
     </div>
 
+    <!-- Sectio nto handle speed based on the user input -->
     <div class="card">
       <h2>Speed Control</h2>
       <div class="speed-control">
@@ -149,6 +162,7 @@
       <p>Current Speed: <span id="speedValue">50</span>%</p>
     </div>
 
+    <!-- Ends the current session -->
     <div class="card">
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
@@ -161,6 +175,7 @@
       }
     };
 
+    // Code to handle loggin into the website
     function login() {
       let username = document.getElementById("username").value;
       let password = document.getElementById("password").value;
@@ -181,6 +196,7 @@
         });
     }
 
+    // function to log out of the website and end the session
     function logout() {
       fetch('logout.php')
         .then(response => response.json())
@@ -197,6 +213,7 @@
 
     const AUTH_TOKEN = "super_secret_token"; 
    
+    // Command to send a post request for the auth tokens
     function securePost(url, bodyObj) {
       return fetch(url, {
         method: 'POST',
@@ -217,6 +234,7 @@
       });
     }
     
+    // Sends speed values to the servervia POST request
     function syncSpeed(value) {
       document.getElementById("speedSlider").value = value;
       document.getElementById("speedInput").value = value;
@@ -234,6 +252,8 @@
           console.error('Error updating speed:', error);
         });
     }
+
+    // Sends start car command to the server via POST request
     function startCarCommand() {
       const url = 'https://192.168.0.102:6969'; // Updated IP address
       securePost(url, {
@@ -246,6 +266,8 @@
           console.error('Start car error:', error);
         });
     }
+
+    // Stops the car via a POST request to the server
     function stopCarCommand() {
       const url = 'https://192.168.0.102:6969'; // Updated IP address
       securePost(url, {
@@ -258,6 +280,8 @@
           console.error('Stop car error:', error);
         });
     }
+
+    // Uploads music to the server and logs response
     function uploadMusic() {
       const fileInput = document.getElementById('musicFile');
       const file = fileInput.files[0];

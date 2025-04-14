@@ -26,7 +26,7 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
-            # Auth check
+            # Auth check via tokens
             token = self.headers.get("Authorization")
             if token != f"Bearer {AUTH_TOKEN}":
                 self.send_response(401)
@@ -34,10 +34,11 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(b'{"error": "Unauthorized"}')
                 return
     
-            # Read content
+            # Read content of the request
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length).decode("utf-8")
     
+            # Will only work with json request data
             if "application/json" in self.headers.get("Content-Type", ""):
                 try:
                     data = json.loads(post_data)
@@ -51,9 +52,11 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b'{"error": "Unsupported media type"}')
     
+    # Handles commands supplied via the json input 
     def handle_command(self, data):
         command = data.get("command")
     
+        # Executes commands for starting the car
         if command == "start_car":
             os.system('/usr/bin/tmux send-keys -t "Car:0.0" "ros2 service call /ctrl_pkg/vehicle_state deepracer_interfaces_pkg/srv/ActiveStateSrv \'{\"state\": 3}\'" ENTER')
             time.sleep(1)
@@ -62,6 +65,7 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
             os.system('/usr/bin/tmux send-keys -t "Car:0.0" "ros2 service call /ftl_navigation_pkg/set_max_speed deepracer_interfaces_pkg/srv/SetMaxSpeedSrv \'{\"max_speed_pct\": 0.99}\'" ENTER')
             response = {"status": "Car started\n"}
     
+        # Executes commands for setting the speed based on the user input
         elif command == "set_speed":
             try:
                 speed = int(data.get("speed"))
@@ -73,18 +77,23 @@ class CommandHandler(http.server.SimpleHTTPRequestHandler):
             except ValueError:
                 response = {"error": "Invalid speed value."}
     
+        # Executes command for stopping FTL on the car
         elif command == "stop_car":
             os.system('/usr/bin/tmux send-keys -t "Car:0.0" "ros2 service call /ctrl_pkg/enable_state deepracer_interfaces_pkg/srv/EnableStateSrv \'{\"is_active\": False}\'" ENTER')
             response = {"status": "Car stopped\n"}
     
+        # Ignore all other commands
         else:
             response = {"error": "Unknown command"}
     
+        # Finished CORs responses / general responses
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')  # Allow cross-origin access
         self.send_header('Content-Type', 'application/json')  # Response type as JSON
         self.end_headers()
         self.wfile.write(json.dumps(response).encode())
+
+# Runs the sever with the given ip and port
 def run():
     server_address = ('', PORT)
     httpd = http.server.HTTPServer(server_address, CommandHandler)

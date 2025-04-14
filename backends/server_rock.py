@@ -25,9 +25,11 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- HELPERS ---
+# Only allows WAV files to be played
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# Handles auth of the web requests
 def require_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -40,6 +42,7 @@ def require_auth(f):
 # --- ROUTES ---
 @app.route('/upload_music', methods=['POST'])
 @require_auth
+# Checks the web request and plays the file if it already exists, or uploads the file to the server and then plays the music
 def upload_music():
     if 'music_file' not in request.files:
         return jsonify({'error': 'No file part'}), 400

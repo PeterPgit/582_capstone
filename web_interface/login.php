@@ -1,11 +1,19 @@
+<!-- 
+Authors: Ian Wilson, Andrew Uriell, Peter Pharm, Michael Oliver 
+Class: Senior Design -- EECS582
+Date: March 26, 2025
+Purpose: Runs the login page for the website and connects to the database
+Code sources: Stackoverflow, ChatGPT, ourselves 
+-->
+
 <?php
 session_start();
 
 // Database connection settings
-$servername = "localhost"; // Change if MySQL is on a different server
-$username = "deepracer_user"; // MySQL username
-$password = "YourStrongPassword"; // MySQL password
-$dbname = "deepracer_db"; // Database name
+$servername = "localhost"; 
+$username = "deepracer_user";
+$password = "YourStrongPassword";
+$dbname = "deepracer_db"; 
 
 // Enable error reporting (for debugging, remove in production)
 ini_set('display_errors', 1);
