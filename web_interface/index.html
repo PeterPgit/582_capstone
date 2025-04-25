@@ -150,9 +150,10 @@ Code sources: Stackoverflow, ChatGPT, ourselves
       <h4>Only .wav files supported!</h4>
       <input type="file" id="musicFile"><br>
       <button onclick="uploadMusic()">Upload & Play</button>
+      <button onClick="stopMusic()">Stop Music</button>
     </div>
 
-    <!-- Sectio nto handle speed based on the user input -->
+    <!-- Section to handle speed based on the user input -->
     <div class="card">
       <h2>Speed Control</h2>
       <div class="speed-control">
@@ -175,7 +176,7 @@ Code sources: Stackoverflow, ChatGPT, ourselves
       }
     };
 
-    // Code to handle loggin into the website
+    // Code to handle login into the website
     function login() {
       let username = document.getElementById("username").value;
       let password = document.getElementById("password").value;
@@ -211,8 +212,8 @@ Code sources: Stackoverflow, ChatGPT, ourselves
       document.getElementById("controlPanel").classList.remove("hidden");
     }
 
-    const AUTH_TOKEN = "super_secret_token"; 
-   
+    const AUTH_TOKEN = "super_secret_token";
+
     // Command to send a post request for the auth tokens
     function securePost(url, bodyObj) {
       return fetch(url, {
@@ -223,23 +224,23 @@ Code sources: Stackoverflow, ChatGPT, ourselves
         },
         body: JSON.stringify(bodyObj)
       })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .catch(error => {
-        console.error('Fetch error:', error);
-      });
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+        });
     }
-    
+
     // Sends speed values to the servervia POST request
     function syncSpeed(value) {
       document.getElementById("speedSlider").value = value;
       document.getElementById("speedInput").value = value;
       document.getElementById("speedValue").innerText = value;
-    
+
       const url = 'https://192.168.0.102:6969'; // Updated IP address
       securePost(url, {
         command: 'set_speed',
@@ -285,15 +286,15 @@ Code sources: Stackoverflow, ChatGPT, ourselves
     function uploadMusic() {
       const fileInput = document.getElementById('musicFile');
       const file = fileInput.files[0];
-    
+
       if (!file) {
         alert("Please select a music file.");
         return;
       }
-    
+
       const formData = new FormData();
       formData.append('music_file', file);
-    
+
       const url = 'https://192.168.0.100:6970/upload_music'; // Updated IP address
       fetch(url, {
         method: 'POST',
@@ -314,7 +315,19 @@ Code sources: Stackoverflow, ChatGPT, ourselves
           console.error('Network error:', error);
         });
     }
-    
+
+    // Command to stop the music via POST request
+    function stopMusic() {
+      const url = 'https://192.168.0.100:6970/stop_music';
+      securePost(url, {})
+        .then(data => {
+          console.log('Stop music response:', data);
+        })
+        .catch(error => {
+          console.error('Stop music error:', error);
+        });
+    }
+
   </script>
 </body>
 

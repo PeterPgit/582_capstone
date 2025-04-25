@@ -1,7 +1,7 @@
 # Sprint 6 Requirements
 
-- [ ] Add controller support
-- [ ] Finalize car design
-- [ ] Add prongs to taser
-- [ ] Create/design poster
-- [ ] Additional music control option
+- [X] Add controller support
+- [X] Finalize car design
+- [X] Add prongs to taser
+- [X] Create/design poster
+- [X] Additional music control option
