@@ -1,5 +1,5 @@
 <!-- 
-Authors: Ian Wilson, Andrew Uriell, Peter Pharm, Michael Oliver 
+Authors: Ian Wilson, Andrew Uriell, Peter Pham, Michael Oliver, Jack Youngquist
 Class: Senior Design -- EECS582
 Date: March 26, 2025
 Purpose: Runs the login page for the website and connects to the database

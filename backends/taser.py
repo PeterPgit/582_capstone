@@ -1,4 +1,4 @@
-# Authors: Ian Wilson, Andrew Uriell, Peter Pharm, Michael Oliver
+# Authors: Ian Wilson, Andrew Uriell, Peter Pham, Michael Oliver, Jack Youngquist
 # Class: Senior Design -- EECS582
 # Date: April 10, 2025
 # Purpose: Python3 script to control the taser through software
